@@ -24,8 +24,12 @@ android=False
 verizon=False
 
 def main():
-    sys.setrecursionlimit(10000000)
-    fin=open("moto-verizon.bin","rb")#so far just manually type in the read in file
+	sys.setrecursionlimit(10000000)
+    #so far just manually type in the read in file
+    #path="moto-verizon/moto-verizon.bin"
+    path="mystery/mtd5_userdata.bin"
+    
+    fin=open(path,"rb")
             
     #List to store phone brands, carriers, and models found in bin to help find patterns 
     foundbrands=[]
@@ -57,7 +61,7 @@ def main():
         #this was working somewhat before i transfered it over into this file also
         #I'll work on it
         #if  verizon==True and motorola==True and W385==True:
-        if fin=="moto-verizon.bin":
+        if path=="moto-verizon/moto-verizon.bin":
             print line
             if line.startswith('From'):
                 print line
@@ -86,8 +90,9 @@ def main():
         #
         #The multiple "if msg.startswith(i):" statements was for the lines that contained multiple dates and
         #times. It is one of the things that used to work but not anymore.
-        mystery=False
-        if mystery==True:
+        #mystery=False
+        #if mystery==True:
+        if path=="mystery/mtd5_userdata.bin":
             for i in years:
                 if i in line:
                     while not line.startswith(i):
