@@ -25,11 +25,11 @@ verizon=False
 
 def main():
 	sys.setrecursionlimit(10000000)
-    #so far just manually type in the read in file
-    #path="moto-verizon/moto-verizon.bin"
-    path="mystery/mtd5_userdata.bin"
+	#so far just manually type in the read in file
+	#path="moto-verizon/moto-verizon.bin"
+	path="mystery/mtd5_userdata.bin"
     
-    fin=open(path,"rb")
+	fin=open(path,"rb")
             
     #List to store phone brands, carriers, and models found in bin to help find patterns 
     foundbrands=[]
