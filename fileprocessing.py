@@ -3,7 +3,7 @@ import sys
 import string
 import operator
 
-print_to_shell=True #false for print to external document
+print_to_shell=True #false for print to a text document true to print to shell
 
 years=['2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013']
 
@@ -25,7 +25,7 @@ verizon=False
 
 def main():
     sys.setrecursionlimit(10000000)
-    fin=open("moto-verizon.bin","rb")
+    fin=open("moto-verizon.bin","rb")#so far just manually type in the read in file
             
     #List to store phone brands, carriers, and models found in bin to help find patterns 
     foundbrands=[]
@@ -48,15 +48,16 @@ def main():
         ###verizon, motorola, W385###
         #these bools are just hardcoded for now to be changed later so that the program will set them
         #when we get the brand, carrier and file recognition methods to work
-        verizon=True
-        motorola=True
-        W385=True
+        #verizon=True
+        #motorola=True
+        #W385=True
         #
         #some work i was doing - so far just I am just trying to recognize paterns assosiated
         #with text message lines
         #this was working somewhat before i transfered it over into this file also
         #I'll work on it
-        if  verizon==True and motorola==True and W385==True:
+        #if  verizon==True and motorola==True and W385==True:
+        if fin=="moto-verizon.bin":
             print line
             if line.startswith('From'):
                 print line
