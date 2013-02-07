@@ -80,16 +80,9 @@ def main():
             else:
                 phonepatern(line)
 
-                
         ###mystery phone###
-        #some work i was doing - this gives pretty good results even if some results are not text messages
-        #transfering it over to this file seems to have messed some things up
-        #fileprocessing_mtd5.py is the file I tansfered it from
+        #some work i was doing - this gives pretty good results.
         #
-        #Before transfering it over it gave almost 200 lines now it only gives about 100 lines
-        #
-        #The multiple "if msg.startswith(i):" statements was for the lines that contained multiple dates and
-        #times. It is one of the things that used to work but not anymore.
         #mystery=False
         #if mystery==True:
         if path=="mystery/mtd5_userdata.bin":
@@ -105,8 +98,8 @@ def main():
                     if phonepos is not None:
                         phone+=phonepos
                     name=getname(msg, phone)
-                    if not msg.startswith(i):
-                        if dashdate(date)==True:
+                    if msg.startswith(i):
+                        if notdashdate(date)==True:
                             break
                         if faketime(time)==True:
                             break
@@ -116,19 +109,14 @@ def main():
                             rtouple=(date, time, phone, name)
                         elif not phone:
                             rtouple=(date, time, msg)
-                        print rtouple
-                        outdata.append(rtouple)
-                    if msg.startswith(i):
-                        date2=str(msg[0:10])
-                        time2=str(msg[11:19])
-                        msg2=str(msg[19:])
-                        name2=getname(msg2, phone)
                         if not msg.startswith(i):
-                            if dashdate(date)==True:
-                                break
-                            if faketime(time)==True:
-                                break
-                            if dashdate(date2)==True:
+                            outdata.append(rtouple)
+                        elif msg.startswith(i):
+                            date2=str(msg[0:10])
+                            time2=str(msg[11:19])
+                            msg2=str(msg[19:])
+                            name2=getname(msg2, phone)
+                            if notdashdate(date2)==True:
                                 break
                             if faketime(time2)==True:
                                 break
@@ -138,34 +126,28 @@ def main():
                                 xltouple=(date, time, date2, time2, phone, name2)
                             elif not phone:
                                 xltouple=(date, time, date2, time2, msg2)
-                            outdata.append(xltouple)
-                            print xltouple
-                        if msg2.startswith(i):
-                            date3=str(msg2[0:10])
-                            time3=str(msg2[11:19])
-                            msg3=str(msg2[19:])
-                            if dashdate(date)==True:
-                                break
-                            if faketime(time)==True:
-                                break
-                            if dashdate(date2)==True:
-                                break
-                            if faketime(time2)==True:
-                                break
-                            if dashdate(date3)==True:
-                                break
-                            if faketime(time3)==True:
-                                break
-                            if fakemsg(msg3)==True:
-                                break
-                            name3=getname(msg3, phone)
-                            if phone:
-                                xxltouple=(date, time, date2, time2, date3, time3, phone, name3)
-                            elif not phone:
-                                xxltouple=(date, time, date2, time2, date3, time3, msg3)
-                            outdata.append(xxltouple)
-                            print xxltouple
+                            if not msg2.startswith(i):
+                                outdata.append(xltouple)
+                            if msg2.startswith(i):
+                                date3=str(msg2[0:10])
+                                time3=str(msg2[11:19])
+                                msg3=str(msg2[19:])
+                                if notdashdate(date3)==True:
+                                    break
+                                if faketime(time3)==True:
+                                    break
+                                if fakemsg(msg3)==True:
+                                    break
+                                name3=getname(msg3, phone)
+                                if phone:
+                                    xxltouple=(date, time, date2, time2, date3, time3, phone, name3)
+                                elif not phone:
+                                    xxltouple=(date, time, date2, time2, date3, time3, msg3)
+                                outdata.append(xxltouple)
+    for item in outdata:
+        print item
     fin.close()
+
 
 
             
@@ -259,7 +241,7 @@ def datefinder(line, date):
     return line
 
 #for dates formated with dashes
-def dashdate(line):
+def notdashdate(line):
     global valid_date_dash
     errorcount=0
     dashcount=0
