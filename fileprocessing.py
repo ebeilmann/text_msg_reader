@@ -3,7 +3,7 @@ import sys
 import string
 import operator
 
-print_to_shell=True #false for print to a text document true to print to shell
+print_to_shell=True #once fixed a false will print output to a text document true to print to the python shell
 
 years=['2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013']
 
