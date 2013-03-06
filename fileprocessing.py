@@ -19,133 +19,91 @@ valid_time=['0','1','2','3','4','5','6','7','8','9',':']
 
 phone=''
 outdata=[]
-
-android=False
-verizon=False
+print_to_shell=True
+print_to_doc=False
 
 def main():
-   sys.setrecursionlimit(10000000)
-   #so far just manually type in the read in file
-   #path="moto-verizon/moto-verizon.bin"
-   path="mystery/mtd5_userdata.bin"
-    
-   fin=open(path,"rb")
+    sys.setrecursionlimit(10000000)
+    #so far just manually type in the read in file
+    path="binfiles/mystery/mtd5_userdata.bin"
+    fin=open(path,"rb")
             
     #List to store phone brands, carriers, and models found in bin to help find patterns 
-    foundbrands=[]
-    foundcarriers=[]
-    foundmodels=[] 
+    filelist=[]
     for line in fin:
         line=wantedchars(line)
         line=repr(line)
+        filelist.append(line)
 
-        #was going to use this to remove all deuplicate lines
-        #filelist=duplicateremoval(filelist)
-
-        #functions to find phone details - didn't finish yet
-        #phonebrand(filelist)
-        #carriername(filelist)
-        #modelnumber(filelist)
+    #functions to find phone details
+    print product_brand(filelist)
+    print product_name(filelist)
+    print build_host(filelist)
+    print build_version(filelist)
 
 ############phone specific processes(brand, carrier, model)############
-        
-        ###verizon, motorola, W385###
-        #these bools are just hardcoded for now to be changed later so that the program will set them
-        #when we get the brand, carrier and file recognition methods to work
-        #verizon=True
-        #motorola=True
-        #W385=True
-        #
-        #some work i was doing - so far just I am just trying to recognize paterns assosiated
-        #with text message lines
-        #this was working somewhat before i transfered it over into this file also
-        #I'll work on it
-        #if  verizon==True and motorola==True and W385==True:
-        if path=="moto-verizon/moto-verizon.bin":
-            print line
-            if line.startswith('From'):
-                print line
-            elif line.startswith('7'):
-                print line
-            elif line.startswith(':'):
-                print line
-            elif line.startswith('A'):
-                print line
-            elif line.startswith('$'):
-                print line
-            elif line.startswith('+'):
-                print line
-            elif line.startswith('9'):
-                print line
-            else:
-                phonepatern(line)
 
-        ###mystery phone###
-        #some work i was doing - this gives pretty good results.
-        #
-        #mystery=False
-        #if mystery==True:
-        if path=="mystery/mtd5_userdata.bin":
-            for i in years:
-                if i in line:
-                    while not line.startswith(i):
-                        line=line[1:]
-                    date=str(line[0:10])
-                    time=str(line[11:19])
-                    msg=str(line[19:])
-                    phone=""
-                    phonepos=phonepatern(msg)
-                    if phonepos is not None:
-                        phone+=phonepos
-                    name=getname(msg, phone)
-                    if msg.startswith(i):
-                        if notdashdate(date)==True:
+    ###mystery phone###
+    for line in filelist:
+        for i in years:
+            if i in line:
+                while not line.startswith(i):
+                    line=line[1:]
+                date=str(line[0:10])
+                time=str(line[11:19])
+                msg=str(line[19:])
+                phone=""
+                phonepos=phonepatern(msg)
+                if phonepos is not None:
+                    phone+=phonepos
+                name=getname(msg, phone)
+                if msg.startswith(i):
+                    if notdashdate(date)==True:
+                        break
+                    if faketime(time)==True:
+                        break
+                    if fakemsg(msg)==True:
+                        break
+                    if phone and name:
+                        rtouple=(date, time, phone, name)
+                    elif not phone:
+                        rtouple=(date, time, msg)
+                    if not msg.startswith(i):
+                        outdata.append(rtouple)
+                    elif msg.startswith(i):
+                        date2=str(msg[0:10])
+                        time2=str(msg[11:19])
+                        msg2=str(msg[19:])
+                        name2=getname(msg2, phone)
+                        if notdashdate(date2)==True:
                             break
-                        if faketime(time)==True:
+                        if faketime(time2)==True:
                             break
-                        if fakemsg(msg)==True:
+                        if fakemsg(msg2)==True:
                             break
                         if phone and name:
-                            rtouple=(date, time, phone, name)
+                            xltouple=(date, time, date2, time2, phone, name2)
                         elif not phone:
-                            rtouple=(date, time, msg)
-                        if not msg.startswith(i):
-                            outdata.append(rtouple)
-                        elif msg.startswith(i):
-                            date2=str(msg[0:10])
-                            time2=str(msg[11:19])
-                            msg2=str(msg[19:])
-                            name2=getname(msg2, phone)
-                            if notdashdate(date2)==True:
+                            xltouple=(date, time, date2, time2, msg2)
+                        if not msg2.startswith(i):
+                            outdata.append(xltouple)
+                        if msg2.startswith(i):
+                            date3=str(msg2[0:10])
+                            time3=str(msg2[11:19])
+                            msg3=str(msg2[19:])
+                            if notdashdate(date3)==True:
                                 break
-                            if faketime(time2)==True:
+                            if faketime(time3)==True:
                                 break
-                            if fakemsg(msg2)==True:
+                            if fakemsg(msg3)==True:
                                 break
-                            if phone and name:
-                                xltouple=(date, time, date2, time2, phone, name2)
+                            name3=getname(msg3, phone)
+                            if phone:
+                                xxltouple=(date, time, date2, time2, date3, time3, phone, name3)
                             elif not phone:
-                                xltouple=(date, time, date2, time2, msg2)
-                            if not msg2.startswith(i):
-                                outdata.append(xltouple)
-                            if msg2.startswith(i):
-                                date3=str(msg2[0:10])
-                                time3=str(msg2[11:19])
-                                msg3=str(msg2[19:])
-                                if notdashdate(date3)==True:
-                                    break
-                                if faketime(time3)==True:
-                                    break
-                                if fakemsg(msg3)==True:
-                                    break
-                                name3=getname(msg3, phone)
-                                if phone:
-                                    xxltouple=(date, time, date2, time2, date3, time3, phone, name3)
-                                elif not phone:
-                                    xxltouple=(date, time, date2, time2, date3, time3, msg3)
-                                outdata.append(xxltouple)
-    for item in outdata:
-        print item
+                                xxltouple=(date, time, date2, time2, date3, time3, msg3)
+                            outdata.append(xxltouple)
+    printtuple()
     fin.close()
 
 
@@ -169,18 +127,78 @@ def duplicateremoval(filelist):
     return dupfree
 
 def printtuple():
-    for item in outdata:
+    outdatasort=sortdata()
+    combinedlist=combinedatetime(outdatasort)
+    #alldata=callermatch(combinedlist)
+    for line in combinedlist:
         if print_to_shell==True:
-            print item
-        else:
+            print line
+        if print_to_doc==True:
             fout=open(filename+'.txt','wb')
-            print>>fout,item
+            print>>fout,line
             fout.close()
         
 #sorts tuples by index number
 def sortdata():
-    index=0
-    self.outdata.sort(key=operator.itemgetter(index))
+    outdatasep=[]
+    for tup in outdata:
+        if len(tup)==6:
+            date1,time1,date2,time2,phone,name=tup
+            date1=date1.split('-')
+            time1=time1.split(':')
+            date2=date2.split('-')
+            time2=time2.split(':')
+            newtup=(date1[0],date1[1],date1[2],time1[0],time1[1],time1[2],date2[0],date2[1],date2[2],time2[0],time2[1],time2[2],phone,name)
+            outdatasep.append(newtup)
+        if len(tup)==5:
+            date1,time1,date2,time2,message=tup
+            date1=date1.split('-')
+            time1=time1.split(':')
+            date2=date2.split('-')
+            time2=time2.split(':')
+            newtup=(date1[0],date1[1],date1[2],time1[0],time1[1],time1[2],date2[0],date2[1],date2[2],time2[0],time2[1],time2[2],message)
+            outdatasep.append(newtup)
+            
+    outdatasort=sorted(outdatasep, key=operator.itemgetter(0,1,2,3,4,5))
+    return outdatasort
+def combinedatetime(tuplelist):
+    combinelist=[]
+    for tup in tuplelist:
+        if len(tup)==14:
+            year1,month1,day1,hour1,min1,sec1,year2,month2,day2,hour2,min2,sec2,phone,name=tup
+            newtup=(year1+'-'+month1+'-'+day1,hour1+':'+min1+':'+sec1,year2+'-'+month2+'-'+day2,hour2+':'+min2+':'+sec2,phone,name)
+            combinelist.append(newtup)
+        if len(tup)==13:
+            year1,month1,day1,hour1,min1,sec1,year2,month2,day2,hour2,min2,sec2,message=tup
+            newtup=(year1+'-'+month1+'-'+day1,hour1+':'+min1+':'+sec1,year2+'-'+month2+'-'+day2,hour2+':'+min2+':'+sec2,message)
+            combinelist.append(newtup)
+    return combinelist
+
+##def callermatch(tuplelist):
+##    matchedlist=[]
+##    tupcount=0
+##    for tupline in tuplelist:
+##        tupcount+=1
+##        messageline=0
+##        numberline=0
+##        if len(tupline)==5:
+##            messageline+=1
+##            date1,time1,date2,time2,message=tup
+##        if len(tupline)==6:
+##            numberline+=1
+##            date1,time1,date2,time2,phone,name=tup
+##
+##            newtup=date1,time1,date2,time2,phone,name,message
+##            
+##        else
+##            matchedlist.append('error',tupline)
+            
+        
+        
+        
+    #return matchedlist
+        
+    
 
 #removes all but the standered chars               
 def wantedchars(line):
@@ -191,35 +209,130 @@ def wantedchars(line):
     if lineout is not None:
         return lineout
     
-##########phone specifics##########     
-def phonebrand(filelist):
-    brands=['Apple','Firefly','Garmin','Motorola','Palm','Sanyo','Sonim','Sony']
-    foundbrands=[]
-    for brand in brands:
-        for line in filelist:
-            if brand in line:
-                foundbrands.append(brand)
-    if len(foundbrands)>=1:
-        for item in foundbrands:
-            print 'Found Brand: ',item
-    else:
-        print 'unknown phone type'
+##########phone specifics##########
+def product_brand(filelist):
+    for line in filelist:
+        if "ro.product.brand=" in line:
+            eq=line.find('=')
+            return "Product Brand: "+line[eq+1:-1]
+        
+    return "Not Found"
 
+def product_name(filelist):
+    for line in filelist:
+        if "ro.product.model=" in line:
+            eq=line.find('=')
+            return "Product Model: "+line[eq+1:-1]
+        
+    return "Not Found"
+
+def build_host(filelist):
+    for line in filelist:
+        if "ro.build.host=" in line:
+            eq=line.find('=')
+            return "Build Host: "+line[eq+1:-1]
+            
+    return "Not Found"
+
+def build_version(filelist):
+    for line in filelist:
+        if "ro.build.version.release=" in line:
+            eq=line.find('=')
+            return "Build Version: "+line[eq+1:-1]
+        
+    return "Not Found"
+
+def phone_brand_search(filelist):
+    acer_count=0
+    amazon_count=0
+    alcatel_count=0
+    apple_count=0
+    asus_count=0
+    att_count=0
+    blackberry_count=0
+    cherry_count=0
+    firefly_count=0
+    garmin_count=0
+    htc_count=0
+    hp_count=0
+    huawei_count=0
+    lg_count=0
+    motorola_count=0
+    myphone_count=0
+    nokia_count=0
+    o2_count=0
+    palm_count=0
+    panasonic_count=0
+    samsung_count=0
+    sanyo_count=0
+    siemens_count=0
+    sonim_count=0
+    sony_count=0
+    tmobile_count=0
+    verizon_count=0
+    brandlist={'Acer':acer_count,'Amazon':amazon_count,'Alcatel':alcatel_count,'Apple':apple_count,'Asus':asus_count,'AT&T':att_count,
+               'Blackberry':blackberry_count,'Cherry mobile':cherry_count,'Firefly':firefly_count,'Garmin':garmin_count,
+               'HTC':htc_count,'Hewlett-Packard':hp_count,'Huawei':huawei_count,'LG':lg_count,'Motorola':motorola_count,
+               'MyPhone':myphone_count,'Nokia':nokia_count,' O2 ':o2_count,'Palm':palm_count,'Panasonic':panasonic_count,
+               'Samsung':samsung_count,'Sanyo':sanyo_count,'Siemens':siemens_count,'Sonim':sonim_count,'Sony':sony_count,
+               'T-mobile':tmobile_count,'Verizon':verizon_count}
     
-def carriername(filelist):
-    carriers=['Verizon Wireless','AT&T Mobility','Sprint Nextel','T-Mobile USA','TracFone Wireless','MetroPCS','Cricket Wireless','U.S. Cellular']
-    foundcarriers=[]
-    for carrier in carriers:
-        for line in filelist:
-            if carrier in line:
-                foundcarriers.append(carrier)
-    if len(foundcarriers)>=1:
-        for item in foundcarriers:
-            print 'Found Carrier: ',item
-    else:
-        print 'unknown carrier'
+    for line in filelist:
+        for brand, count in brandlist.items():
+            if brand in line:
+                brandlist[brand]=count+1
+
+    for brand, count in brandlist.iteritems():
+        if count>0:
+            print "Possible Brand: "+str(brand)+" found "+str(count)+" times."
+        
+
+def phone_os_search(filelist):
+    android_count=0
+    bada_count=0
+    blackberry_count=0
+    ios_count=0
+    mobile_linux_count=0
+    windows_ce_count=0
+    windows_mobile_count=0
+    windows_phone_count=0
+    oslist={'Android':android_count,'BADA':bada_count,'BlackBerry':blackberry_count,
+            'IOS':ios_count,'Mobil Linux':mobile_linux_count,'Windows CE':windows_ce_count,
+            'Windows Mobile':windows_mobile_count,'Windows Phone':windows_phone_count}
     
-def modelnumber(filelist):
+    for line in filelist:
+        for os, count in oslist.items():
+            if os in line:
+                oslist[os]=count+1
+
+    for os, count in oslist.iteritems():
+        if count>0:
+            print "Possible OS: "+str(os)+" found "+str(count)+" times."
+        
+    
+def carrier_name_search(filelist):
+    verizon_count=0
+    att_count=0
+    sprint_count=0
+    tmobile_count=0
+    tracfone_count=0
+    metropcs_count=0
+    circket_count=0
+    us_count=0
+    carriers={'Verizon Wireless':verizon_count,'AT&T Mobility':att_count,'Sprint Nextel':sprint_count,
+              'T-Mobile USA':tmobile_count,'TracFone Wireless':tracfone_count,'MetroPCS':metropcs_count,
+              'Cricket Wireless':circket_count,'U.S. Cellular':us_count}
+    
+    for line in filelist:
+        for car, count in carriers.items():
+            if car in line:
+                carriers[car]=count+1
+
+    for car, count in carriers.iteritems():
+        if count>0:
+            print "Possible Carrier: "+str(car)+" found "+str(count)+" times."
+    
+def model_number_search(filelist):
     models=['Motorola W385']
     foundmodels=[]
     for model in models:
@@ -294,7 +407,7 @@ def fakemsg(line):
 
 ##########phone number methods##########
 #checks for 10 digits in a row 
-def phonepatern(line):
+def phonepatern(line):#note: a fix is needed for phone numbers without the area code, currently they are caught as text messages
     number=''
     for char in line:
         if len(number)==10:
