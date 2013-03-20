@@ -1,4 +1,4 @@
-# example input:  input = [('Time1','Recipient1','Message1'),('Time2','Recipient2','Message2'),('Time3','Recipient3','Message3'),('Time4','Recipient4','Message4')]
+# example input: input = [('Date','Time','Message','Name','Phone Number'),('Date','Time','Message','Name','Phone Number'),('Date','Time','Message','Name','Phone Number')]
 
 # Specification 7.0 - 10.0
 def createOutputFile(input):
@@ -24,19 +24,25 @@ def createOutputFile(input):
         '<body>\n'
         '<table>\n'
         '<tr id="header">\n'
-        '<td style="width: 150px;"><h3>Time:</h3></td>\n'
-        '<td style="width: 130px;"><h3>Recipient:</h3></td>\n'
-        '<td><h3>Message:</h3></td>\n'
+        '<td style="width: 130px;"><h3>Date:</h3></td>\n'
+        '<td style="width: 130px;"><h3>Time:</h3></td>\n'
+        '<td style="width: 280px;"><h3>Message:</h3></td>\n'
+        '<td style="width: 130px;"><h3>Name:</h3></td>\n'
+        '<td style="width: 130px;"><h3>Phone Number:</h3></td>\n'
         '</tr>\n')
 
     for i in range(0, len(input)-1,2):
         f.write('<tr id="odd"><td><p>' + input[i][0] + '</p></td>\n')
         f.write('<td><p>' + input[i][1] + '</p></td>')
-        f.write('<td><p>' + input[i][2] + '</p></td></tr>')
+        f.write('<td><p>' + input[i][2] + '</p></td>')
+        f.write('<td><p>' + input[i][3] + '</p></td>')
+        f.write('<td><p>' + input[i][4] + '</p></td></tr>')
 
         f.write('<tr id="even"><td><p>' + input[i+1][0] + '</p></td>\n')
         f.write('<td><p>' + input[i+1][1] + '</p></td>')
-        f.write('<td><p>' + input[i+1][2] + '</p></td></tr>')
+        f.write('<td><p>' + input[i+1][2] + '</p></td>')
+        f.write('<td><p>' + input[i+1][3] + '</p></td>')
+        f.write('<td><p>' + input[i+1][4] + '</p></td></tr>')
         
     f.write('</table></body></html>\n')
     f.close()
