@@ -86,7 +86,7 @@ def main():
     finone.close()
     fintwo.close()
     
-######################################### process text message methods ######################################### Specification Optional
+################################# process text message methods ################################# Specification Optional
 #sorts tuples by date and time then matches callers and their phone numbers to the text messages
 def sortdata(filelist): # Specification optional
     msgdata=[]
@@ -133,7 +133,25 @@ def sortdata(filelist): # Specification optional
                 hour=msghour
             if nummin==msgmin:
                 minute=msgmin
-            if int(numsec)+10>int(msgsec) and int(numsec)-10<int(msgsec):
+            if int(numsec)+1>int(msgsec) and int(numsec)-1<int(msgsec):
+                sec=str(msgsec)
+            elif int(numsec)+2>int(msgsec) and int(numsec)-2<int(msgsec):
+                sec=str(msgsec)
+            elif int(numsec)+3>int(msgsec) and int(numsec)-3<int(msgsec):
+                sec=str(msgsec)
+            elif int(numsec)+4>int(msgsec) and int(numsec)-4<int(msgsec):
+                sec=str(msgsec)
+            elif int(numsec)+5>int(msgsec) and int(numsec)-5<int(msgsec):
+                sec=str(msgsec)
+            elif int(numsec)+6>int(msgsec) and int(numsec)-6<int(msgsec):
+                sec=str(msgsec)
+            elif int(numsec)+7>int(msgsec) and int(numsec)-7<int(msgsec):
+                sec=str(msgsec)
+            elif int(numsec)+8>int(msgsec) and int(numsec)-8<int(msgsec):
+                sec=str(msgsec)
+            elif int(numsec)+9>int(msgsec) and int(numsec)-9<int(msgsec):
+                sec=str(msgsec)
+            elif int(numsec)+10>int(msgsec) and int(numsec)-10<int(msgsec):
                 sec=str(msgsec)
             if year!='' and month!='' and day!='' and hour!='' and minute!='' and sec!='':
                 combinetuple=(year,month,day,hour,minute,sec,message,name,phone)
@@ -149,7 +167,7 @@ def sortdata(filelist): # Specification optional
         joinedlist.append(joinedtuple)
     return joinedlist
 
-#removes line if found in "invalid_msg_content" list
+#removes line/part of line if found in "invalid_msg_content" list
 invalid_msg_content=["\x01","\x05","\n"] # Specification 3.0.1
 def remove_nonmsg(line):
     if line[10]=='T':
@@ -160,7 +178,7 @@ def remove_nonmsg(line):
             line=line[:invalidloc]
     return line
 
-##################################### caller name and phone number methods ##################################### Specification 2.0.X
+############################## caller name and phone number methods ############################## Specification 2.0.X
 #checks for 7 or more digits in a row
 def phonepatern(line):
    number=re.findall('\d{7,}',line)
@@ -176,7 +194,7 @@ def getname(line, phone):
         name=line[:firstloc]
         return name
     
-################################################ phone Details ################################################ 3.0.1
+########################################## phone Details ########################################## Specification 3.0.1
 def phonedetails(finone):
     infolist=[]
     for line in finone:
@@ -236,7 +254,7 @@ def build_version(line):
         outline='Build Version: '+line[loc+len(versionstring):-1]
         return outline
 
-############################################### Making HTML file ###############################################
+#################################### Making HTML file #################################### Specification 7.0.X - 10.0.X
 # example input: input = [('Date','Time','Message','Name','Phone Number'),('Date','Time','Message','Name','Phone Number'),('Date','Time','Message','Name','Phone Number')]
 
 # Specification 7.0.X - 10.0.X
