@@ -4,15 +4,17 @@ import string
 import operator
 import re
 
-#note: names and numbers possibly on line 261568
-
-print_to_doc=True # if False it will print to shell
-print_to_shell=True
+print_to_doc=False 
+print_to_shell=False
 make_html=True
-
 def main():
-    #Future location of specification 1.0.X
-    path='binfiles/mystery/mtd5_userdata.bin'
+    
+    # validate command line arguments # specification 1.0.X
+    if len(sys.argv) != 2:
+        fail()
+    if not os.path.isfile(sys.argv[1]):
+        fail()
+    path=sys.argv[1]
     filename=os.path.basename(path)
     basename=os.path.basename(path)
     dotloc=basename.find(".")
@@ -45,7 +47,6 @@ def main():
                 if newline is not None:
                     splitfilelist.append(newline)
 
-            
     for line in splitfilelist:
         date=str(line[0:10]) # specification 4.0.1
         time=str(line[11:19]) # specification 4.0.1
@@ -57,6 +58,9 @@ def main():
         if phonepos is not None:
             phone=phonepos
         name=getname(msg, phone)
+        if len(phone)==20:
+            half=len(phone)/2
+            phone=phone[:half]
         if phone and name:
             texttuple=(date, time, phone, name)
             predata.append(texttuple)
@@ -66,6 +70,7 @@ def main():
                 predata.append(texttuple)
                 
     sorteddata=sortdata(predata) # specification 5.0.1
+    print len(sorteddata)
     outdata.append(sorteddata)
     phoneinfo=outdata[0]
     textinfo=outdata[1]
@@ -153,10 +158,12 @@ def sortdata(filelist): # Specification optional
                 sec=str(msgsec)
             elif int(numsec)+10>int(msgsec) and int(numsec)-10<int(msgsec):
                 sec=str(msgsec)
+            elif int(numsec)+11>int(msgsec) and int(numsec)-11<int(msgsec):
+                sec=str(msgsec)
             if year!='' and month!='' and day!='' and hour!='' and minute!='' and sec!='':
                 combinetuple=(year,month,day,hour,minute,sec,message,name,phone)
                 combinelist.append(combinetuple)
-                
+
     #sort by year, month, day, hour, minute, and second
     combinelist=sorted(combinelist, key=operator.itemgetter(0,1,2,3,4,5))
     #Rejoin all data back into a tuple with original time and date format
@@ -186,12 +193,14 @@ def phonepatern(line):
    number=number[2:-2]
    return number
            
-#returns caller name    
+#returns caller name or None if no name is available
 def getname(line, phone):
     if phone and line:
         first=phone[0]
         firstloc=line.find(first)
         name=line[:firstloc]
+        if name=="":
+            name="None"
         return name
     
 ########################################## phone Details ########################################## Specification 3.0.1
@@ -210,9 +219,8 @@ def phonedetails(finone):
             infolist.append(host)
         if version is not None:
             infolist.append(version)
-    
     return infolist
-        
+
 brandfound=False
 modelfound=False
 hostfound=False
@@ -304,6 +312,15 @@ def createOutputFile(input):
         
     f.write('</table></body></html>\n')
     f.close()
+
+def fail():
+    print "Missing or invalid argument."
+    print "Please enter the name of a '.bin' file."
+    print "Examples of usage:"
+    print "phonesearch.py nokia.bin"
+    print "If the path has a space, use quotation marks."
+    print '"phone search.py"'
+    sys.exit(-1)
     
 main()
 
