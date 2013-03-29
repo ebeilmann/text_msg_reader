@@ -117,51 +117,8 @@ def sortdata(filelist): # Specification optional
     combinelist=[]
     for msg in msgdata:
         for num in numdata:
-            year=''
-            month=''
-            day=''
-            hour=''
-            minute=''
-            sec=''
-            phone=''
-            name=''
-            message=''
-            numyear,nummonth,numday,numhour,nummin,numsec,phone,name=num
-            msgyear,msgmonth,msgday,msghour,msgmin,msgsec,message=msg
-            if numyear==msgyear:
-                year=msgyear
-            if nummonth==msgmonth:
-                month=msgmonth
-            if numday==msgday:
-                day=msgday
-            if numhour==msghour:
-                hour=msghour
-            if nummin==msgmin:
-                minute=msgmin
-            if int(numsec)+1>int(msgsec) and int(numsec)-1<int(msgsec):
-                sec=str(msgsec)
-            elif int(numsec)+2>int(msgsec) and int(numsec)-2<int(msgsec):
-                sec=str(msgsec)
-            elif int(numsec)+3>int(msgsec) and int(numsec)-3<int(msgsec):
-                sec=str(msgsec)
-            elif int(numsec)+4>int(msgsec) and int(numsec)-4<int(msgsec):
-                sec=str(msgsec)
-            elif int(numsec)+5>int(msgsec) and int(numsec)-5<int(msgsec):
-                sec=str(msgsec)
-            elif int(numsec)+6>int(msgsec) and int(numsec)-6<int(msgsec):
-                sec=str(msgsec)
-            elif int(numsec)+7>int(msgsec) and int(numsec)-7<int(msgsec):
-                sec=str(msgsec)
-            elif int(numsec)+8>int(msgsec) and int(numsec)-8<int(msgsec):
-                sec=str(msgsec)
-            elif int(numsec)+9>int(msgsec) and int(numsec)-9<int(msgsec):
-                sec=str(msgsec)
-            elif int(numsec)+10>int(msgsec) and int(numsec)-10<int(msgsec):
-                sec=str(msgsec)
-            elif int(numsec)+11>int(msgsec) and int(numsec)-11<int(msgsec):
-                sec=str(msgsec)
-            if year!='' and month!='' and day!='' and hour!='' and minute!='' and sec!='':
-                combinetuple=(year,month,day,hour,minute,sec,message,name,phone)
+            if num[:5]==msg[:5]:
+                combinetuple=(num[0],num[1],num[2],num[3],num[4],num[5],msg[6],num[7],num[6])
                 combinelist.append(combinetuple)
 
     #sort by year, month, day, hour, minute, and second
