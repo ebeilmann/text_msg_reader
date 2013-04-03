@@ -7,7 +7,7 @@ from functions import *
 from html import *
 
 def main():
-    if len(sys.argv) != 2:                                      # validate command line arguments ###(specification 1.0.X)###
+    if len(sys.argv) != 2:                                      # Validate command line arguments ###(specification 1.0.X)###
         failcommandline()                                                  
     if not os.path.isfile(sys.argv[1]):
         failcommandline() 
@@ -16,9 +16,9 @@ def main():
     basename=os.path.basename(path)
     dotloc=basename.find(".")
     basename=basename[:dotloc]
-                                                                #opens two copies of the bin file for reading
-    finone=open(path,'rb')                                      #we use two because some processing for phone details seems to interfere
-    fintwo=open(path,'rb')                                      #with the processing of text messages so this seemed like a good fix
+                                                                #Opens two copies of the bin file for reading
+    finone=open(path,'rb')                                      #We use two because some processing for phone details seems to interfere
+    fintwo=open(path,'rb')                                      #With the processing of text messages so this seemed like a good fix
     
     #a list of years to look for. This is usefull since dates are the initial indicators of phone communications and the dates start with years
     years=['2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013']
@@ -26,8 +26,8 @@ def main():
     outdata=[]
     
     #functions to find phone details
-    phoneinfolist=phonedetails(finone)                          #finds brand, manufacturer, version, ect ###(specification 3.0.1)###
-    outdata.append(phoneinfolist)                               #adds phone details as a list to the main output file
+    phoneinfolist=phonedetails(finone)                          #Finds brand, manufacturer, version, ect ###(specification 3.0.1)###
+    outdata.append(phoneinfolist)                               #Adds phone details as a list to the main output file
 
     #Error messages from not using this program on an appropriate cell phone type
     if "Product Brand: verizon" not in phoneinfolist:
@@ -70,15 +70,15 @@ def main():
             if msg is not None:
                 predata.append(texttuple)                       #Both tuple types are appended to a list named predata (here and above four lines)
                 
-    sorteddata=sortdata(predata)                                #the tuples are sent to our sortdata function ###(specification 5.0.1)###                      
-    outdata.append(sorteddata)                                  #the sorted and processed data is appended to the main output file as a list (outdata is now a list of two lists)
-    phoneinfo=outdata[0]                                        #first list from outdata (the phone info from near the begining)
-    textinfo=outdata[1]                                         #second list from outdata (the text and phone number info)
-    createOutputFile(textinfo)                                  #for printing to an html file ###(Specification 7.0.X - 10.0.X)###
-    finone.close()                                              #closes the two input files we opened earlier
+    sorteddata=sortdata(predata)                                #The tuples are sent to our sortdata function ###(specification 5.0.1)###                      
+    outdata.append(sorteddata)                                  #The sorted and processed data is appended to the main output file as a list (outdata is now a list of two lists)
+    phoneinfo=outdata[0]                                        #First list from outdata (the phone info from near the begining)
+    textinfo=outdata[1]                                         #Second list from outdata (the text and phone number info)
+    createOutputFile(textinfo)                                  #For printing to an html file ###(Specification 7.0.X - 10.0.X)###
+    finone.close()                                              #Closes the two input files we opened earlier
     fintwo.close()
 
-def failcommandline():                                                     #Error message for command line argument errors
+def failcommandline():                                          #Error message for command line argument errors
     print "Missing or invalid argument."
     print "Please enter the name of a '.bin' file."
     print "Examples of usage:"
@@ -87,7 +87,7 @@ def failcommandline():                                                     #Erro
     print '"phone search.py"'
     sys.exit(-1)
     
-def failphonetype():                                                     #Error message for unappropriate phone type
+def failphonetype():                                            #Error message for unappropriate phone type
     print "Error: This program has only been proven to work on Verizon Eris cell phones"
     sys.exit(-1)
     
