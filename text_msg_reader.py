@@ -7,7 +7,7 @@ from functions import *
 from html import *
 
 def main():
-    if len(sys.argv) != 2:                                      # Validate command line arguments ###(specification 1.0.X)###
+    if len(sys.argv) != 2:                                      #Validate command line arguments ###(specification 1.0.X)###
         failcommandline()                                                  
     if not os.path.isfile(sys.argv[1]):
         failcommandline() 
@@ -20,12 +20,12 @@ def main():
     finone=open(path,'rb')                                      #We use two because some processing for phone details seems to interfere
     fintwo=open(path,'rb')                                      #With the processing of text messages so this seemed like a good fix
     
-    #a list of years to look for. This is usefull since dates are the initial indicators of phone communications and the dates start with years
+    #A list of years to look for. This is useful since dates are the initial indicators of phone communications and the dates start with years
     years=['2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013']
     predata=[]
     outdata=[]
     
-    #functions to find phone details
+    #Functions to find phone details
     phoneinfolist=phonedetails(finone)                          #Finds brand, manufacturer, version, ect ###(specification 3.0.1)###
     outdata.append(phoneinfolist)                               #Adds phone details as a list to the main output file
 
@@ -33,11 +33,11 @@ def main():
     if "Product Brand: verizon" not in phoneinfolist:
         failphonetype()
 
-    #the start of processing for phone communications
+    #The start of processing for phone communications
     splitfilelist=[]
-    for line in fintwo:                                         #Searches everyline of the bin file
+    for line in fintwo:                                         #Searches every line of the bin file
         for year in years:                                      #Searches every year in the above years list
-            yearcount=line.count(year+'-')                      #Counts the occurences of specific years with a dash after it
+            yearcount=line.count(year+'-')                      #Counts the occurrences of specific years with a dash after it
             while yearcount>1:                                  #While there are any instances of the year-
                 lastyearloc=line.rfind(year+'-')                #It finds the location of the furthest right year-
                 newline=line[lastyearloc:]                      #Create a new line from the year to the end of the line
@@ -46,7 +46,7 @@ def main():
                 newline=remove_nonmsg(newline)                  #The first thing that appears after the text message or phone number are invalid characters...
                                                                     #These are detected and removed by our remove_nonmsg function.###(specification 3.0.2)###
                 if newline is not None:                         
-                    splitfilelist.append(newline)               #appends newline to outdata if it has content
+                    splitfilelist.append(newline)               #Appends newline to outdata if it has content
 
     for line in splitfilelist:
         date=str(line[0:10])                                    #Trims the date off and assigns it a variable name date ###(specification 4.0.1)###
@@ -87,7 +87,7 @@ def failcommandline():                                          #Error message f
     print '"phone search.py"'
     sys.exit(-1)
     
-def failphonetype():                                            #Error message for unappropriate phone type
+def failphonetype():                                            #Error message for inappropriate phone type
     print "Error: This program has only been proven to work on Verizon Eris cell phones"
     sys.exit(-1)
     
