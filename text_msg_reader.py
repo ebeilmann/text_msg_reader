@@ -74,7 +74,7 @@ def main():
     outdata.append(sorteddata)                                  #The sorted and processed data is appended to the main output file as a list (outdata is now a list of two lists)
     phoneinfo=outdata[0]                                        #First list from outdata (the phone info from near the begining)
     textinfo=outdata[1]                                         #Second list from outdata (the text and phone number info)
-    createOutputFile(textinfo)                                  #For printing to an html file ###(Specification 7.0.X - 10.0.X)###
+    createOutputFile(phoneinfo, textinfo)                       #For printing to an html file ###(Specification 7.0.X - 10.0.X)###
     finone.close()                                              #Closes the two input files we opened earlier
     fintwo.close()
 

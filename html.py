@@ -4,7 +4,7 @@
 # example input: input = [('Date','Time','Message','Name','Phone Number'),('Date','Time','Message','Name','Phone Number'),('Date','Time','Message','Name','Phone Number')]
 
 #The below code takes all the information from the list of tuples we gave it and puts it into an html table
-def createOutputFile(input):
+def createOutputFile(phoneinfo, input):
     detailnum=4
     f = open('output.html', 'w+')
     f.close()    
@@ -27,6 +27,11 @@ def createOutputFile(input):
         '</head>\n'
         '<body>\n'
         '<table>\n'
+        '<tr>\n'
+        '<td style="width: 130px; background: #000000;" colspan="5"><h3>' + phoneinfo[0] + '</h3></td>\n'
+        '</tr>\n'
+        '</table>\n' 
+        '<table>\n'
         '<tr id="header">\n'
         '<td style="width: 130px;"><h3>Date:</h3></td>\n'
         '<td style="width: 130px;"><h3>Time:</h3></td>\n'
@@ -37,7 +42,7 @@ def createOutputFile(input):
 
     for i in range(0, len(input)-1,2):
         f.write('<tr id="odd"><td><p>' + input[i][0] + '</p></td>\n')
-        f.write('<td><p>' + input[i][1] + '</p></td>')
+        f.write('<td><p>c</p></td>')
         f.write('<td><p>' + input[i][2] + '</p></td>')
         f.write('<td><p>' + input[i][3] + '</p></td>')
         f.write('<td><p>' + input[i][4] + '</p></td></tr>')
